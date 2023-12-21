@@ -72,7 +72,7 @@ function createMarkup(array) {
   return array
     .map(
       ({ preview, original, description }) => `<li class="gallery-item">
-  <a class="gallery-link" href="${preview}">
+  <a class="gallery-link" href="${original}">
     <img
       class="gallery-image"
       src="${preview}"
@@ -88,20 +88,18 @@ function createMarkup(array) {
 function openModalWindow(event) {
   event.preventDefault();
   const currentEl = event.target;
-  if (currentEl.tagName !== 'IMG') {
+  if (currentEl === event.currentTarget) {
     return;
   }
   const instance = basicLightbox.create(
-    `<img src="${currentEl.dataset.source}" alt="${currentEl.alt}" width="1280">`
+    `<img src="${currentEl.dataset.source}" alt="${currentEl.alt}" >`
   );
-  instance.show();
   const keyPress = event => {
     if (event.code === 'Escape') {
       instance.close();
       document.removeEventListener('keydown', keyPress);
     }
   };
-  if (instance.show()) {
-    document.addEventListener('keydown', keyPress);
-  }
+  instance.show();
+  document.addEventListener('keydown', keyPress);
 }
