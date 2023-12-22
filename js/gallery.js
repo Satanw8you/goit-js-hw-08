@@ -88,18 +88,25 @@ function createMarkup(array) {
 function openModalWindow(event) {
   event.preventDefault();
   const currentEl = event.target;
-  if (currentEl === event.currentTarget) {
+  const liElImg = currentEl.closest('.gallery-image');
+  if (!liElImg) {
     return;
   }
   const instance = basicLightbox.create(
-    `<img src="${currentEl.dataset.source}" alt="${currentEl.alt}" >`
+    `<img src="${liElImg.dataset.source}" alt="${liElImg.alt}" >`,
+    {
+      onShow: instance => {
+        document.addEventListener('keydown', keyPress);
+      },
+      onClose: instance => {
+        document.removeEventListener('keydown', keyPress);
+      },
+    }
   );
-  const keyPress = event => {
+  function keyPress(event) {
     if (event.code === 'Escape') {
       instance.close();
-      document.removeEventListener('keydown', keyPress);
     }
-  };
+  }
   instance.show();
-  document.addEventListener('keydown', keyPress);
 }
